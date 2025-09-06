@@ -15,6 +15,7 @@ export interface GameState {
   initialBoard: SudokuBoard;
   selectedCell: { row: number; col: number } | null;
   isComplete: boolean;
+  showingSolution: boolean;
   errors: Set<string>;
   startTime: number;
   elapsedTime: number;
@@ -30,6 +31,7 @@ export const SudokuGame = () => {
       initialBoard: puzzle.map(row => [...row]),
       selectedCell: null,
       isComplete: false,
+      showingSolution: false,
       errors: new Set(),
       startTime: Date.now(),
       elapsedTime: 0,
@@ -38,7 +40,7 @@ export const SudokuGame = () => {
 
   // Timer effect
   useEffect(() => {
-    if (gameState.isComplete) return;
+    if (gameState.isComplete || gameState.showingSolution) return;
 
     const interval = setInterval(() => {
       setGameState(prev => ({
@@ -48,7 +50,24 @@ export const SudokuGame = () => {
     }, 100);
 
     return () => clearInterval(interval);
-  }, [gameState.isComplete]);
+  }, [gameState.isComplete, gameState.showingSolution]);
+
+  // Keyboard input effect
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      if (!gameState.selectedCell || gameState.isComplete || gameState.showingSolution) return;
+      
+      const key = event.key;
+      if (key >= '1' && key <= '9') {
+        handleNumberInput(parseInt(key));
+      } else if (key === 'Backspace' || key === 'Delete' || key === '0') {
+        handleNumberInput(null);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => window.removeEventListener('keydown', handleKeyPress);
+  }, [gameState.selectedCell, gameState.isComplete, gameState.showingSolution]);
 
   const handleCellClick = useCallback((row: number, col: number) => {
     // Don't allow selecting pre-filled cells
@@ -62,23 +81,31 @@ export const SudokuGame = () => {
     }));
   }, [gameState.initialBoard]);
 
+  const validateAllCells = useCallback((board: CellValue[][]) => {
+    const newErrors = new Set<string>();
+    
+    for (let row = 0; row < 9; row++) {
+      for (let col = 0; col < 9; col++) {
+        const value = board[row][col];
+        if (value !== null && !isValidMove(board, row, col, value)) {
+          newErrors.add(`${row}-${col}`);
+        }
+      }
+    }
+    
+    return newErrors;
+  }, []);
+
   const handleNumberInput = useCallback((number: number | null) => {
     const { selectedCell, board, solution } = gameState;
-    if (!selectedCell) return;
+    if (!selectedCell || gameState.showingSolution) return;
 
     const { row, col } = selectedCell;
     const newBoard = board.map(r => [...r]);
     newBoard[row][col] = number;
 
-    // Check if move is valid
-    const errorKey = `${row}-${col}`;
-    const newErrors = new Set(gameState.errors);
-    
-    if (number !== null && !isValidMove(newBoard, row, col, number)) {
-      newErrors.add(errorKey);
-    } else {
-      newErrors.delete(errorKey);
-    }
+    // Re-validate all cells to handle duplicate removal
+    const newErrors = validateAllCells(newBoard);
 
     // Check if puzzle is complete
     const isComplete = newBoard.every((row, i) => 
@@ -98,7 +125,7 @@ export const SudokuGame = () => {
         description: `You solved the puzzle in ${Math.floor(gameState.elapsedTime / 1000)}s!`,
       });
     }
-  }, [gameState, toast]);
+  }, [gameState, toast, validateAllCells]);
 
   const newGame = useCallback(() => {
     const { puzzle, solution } = generateSudoku();
@@ -108,6 +135,7 @@ export const SudokuGame = () => {
       initialBoard: puzzle.map(row => [...row]),
       selectedCell: null,
       isComplete: false,
+      showingSolution: false,
       errors: new Set(),
       startTime: Date.now(),
       elapsedTime: 0,
@@ -118,7 +146,7 @@ export const SudokuGame = () => {
     setGameState(prev => ({
       ...prev,
       board: prev.solution.map(row => [...row]),
-      isComplete: true,
+      showingSolution: true,
       errors: new Set(),
     }));
   }, []);
@@ -135,8 +163,23 @@ export const SudokuGame = () => {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-[1fr_300px] gap-8 items-start">
-          {/* Game Board */}
+        <div className="grid lg:grid-cols-[300px_1fr_300px] gap-6 items-start">
+          {/* Left Panel - Game Controls */}
+          <div className="space-y-6">
+            <GameStats 
+              elapsedTime={gameState.elapsedTime}
+              isComplete={gameState.isComplete}
+              showingSolution={gameState.showingSolution}
+            />
+            
+            <GameControls
+              onNewGame={newGame}
+              onSolve={solvePuzzle}
+              disabled={gameState.isComplete || gameState.showingSolution}
+            />
+          </div>
+
+          {/* Center - Game Board */}
           <div className="flex flex-col items-center gap-6">
             <SudokuGrid
               board={gameState.board}
@@ -145,26 +188,26 @@ export const SudokuGame = () => {
               errors={gameState.errors}
               onCellClick={handleCellClick}
               isComplete={gameState.isComplete}
-            />
-            
-            <NumberInput
-              selectedCell={gameState.selectedCell}
-              onNumberSelect={handleNumberInput}
+              showingSolution={gameState.showingSolution}
             />
           </div>
 
-          {/* Game Panel */}
+          {/* Right Panel - Number Input */}
           <div className="space-y-6">
-            <GameStats 
-              elapsedTime={gameState.elapsedTime}
-              isComplete={gameState.isComplete}
+            <NumberInput
+              selectedCell={gameState.selectedCell}
+              onNumberSelect={handleNumberInput}
+              disabled={gameState.showingSolution}
             />
             
-            <GameControls
-              onNewGame={newGame}
-              onSolve={solvePuzzle}
-              disabled={gameState.isComplete}
-            />
+            <div className="p-4 bg-gradient-to-br from-game-surface to-game-surface-secondary rounded-xl border border-grid-border">
+              <h3 className="text-sm font-semibold mb-2 text-foreground">Keyboard Controls</h3>
+              <div className="text-xs text-muted-foreground space-y-1">
+                <p>• Press 1-9 to input numbers</p>
+                <p>• Press Backspace/Delete to clear</p>
+                <p>• Click cells to select them</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>

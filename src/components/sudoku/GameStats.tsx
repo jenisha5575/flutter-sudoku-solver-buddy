@@ -3,9 +3,10 @@ import { Clock, Trophy } from "lucide-react";
 interface GameStatsProps {
   elapsedTime: number;
   isComplete: boolean;
+  showingSolution?: boolean;
 }
 
-export const GameStats = ({ elapsedTime, isComplete }: GameStatsProps) => {
+export const GameStats = ({ elapsedTime, isComplete, showingSolution = false }: GameStatsProps) => {
   const formatTime = (ms: number) => {
     const seconds = Math.floor(ms / 1000);
     const minutes = Math.floor(seconds / 60);
@@ -18,13 +19,12 @@ export const GameStats = ({ elapsedTime, isComplete }: GameStatsProps) => {
       <h3 className="text-lg font-semibold mb-4 text-foreground">Game Stats</h3>
       
       <div className="space-y-4">
-        <div className="flex items-center gap-3">
-          <Clock className="w-5 h-5 text-primary" />
-          <div>
-            <p className="text-sm text-muted-foreground">Time</p>
-            <p className="text-xl font-mono font-bold text-foreground">
-              {formatTime(elapsedTime)}
-            </p>
+        <div className="text-center">
+          <div className="text-2xl font-bold text-foreground">
+            {formatTime(elapsedTime)}
+          </div>
+          <div className="text-sm text-muted-foreground">
+            {isComplete ? "Completed!" : showingSolution ? "Solution Shown" : "Time"}
           </div>
         </div>
         

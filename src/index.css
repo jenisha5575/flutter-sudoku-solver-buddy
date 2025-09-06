@@ -6,48 +6,48 @@
 
 @layer base {
   :root {
-    /* Game Background & Surface Colors */
-    --background: 220 30% 8%;
-    --foreground: 210 40% 98%;
-    --game-surface: 220 25% 12%;
-    --game-surface-secondary: 220 20% 16%;
+    /* Light theme - Game colors */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --game-surface: 210 40% 98%;
+    --game-surface-secondary: 220 14.3% 95.9%;
 
     /* Card & Grid Colors */
-    --card: 220 25% 14%;
-    --card-foreground: 210 40% 98%;
-    --grid-border: 220 15% 25%;
-    --grid-thick-border: 220 10% 35%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --grid-border: 220 14.3% 91%;
+    --grid-thick-border: 220 13% 81%;
 
     /* Interactive Elements */
     --primary: 240 100% 65%;
     --primary-foreground: 210 40% 98%;
     --primary-glow: 240 100% 75%;
 
-    --secondary: 280 60% 55%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 222.2 84% 4.9%;
 
     /* Cell States */
-    --cell-empty: 220 20% 18%;
-    --cell-filled: 220 25% 22%;
+    --cell-empty: 0 0% 100%;
+    --cell-filled: 210 40% 98%;
     --cell-selected: 240 100% 65%;
-    --cell-highlighted: 240 50% 35%;
-    --cell-error: 0 75% 55%;
-    --cell-success: 120 60% 50%;
+    --cell-highlighted: 240 100% 95%;
+    --cell-error: 0 84.2% 60.2%;
+    --cell-success: 142.1 76.2% 36.3%;
 
     /* Number Input */
-    --number-button: 220 15% 20%;
-    --number-button-hover: 220 15% 25%;
+    --number-button: 210 40% 98%;
+    --number-button-hover: 220 14.3% 95.9%;
     --number-active: 240 100% 65%;
 
     /* UI Elements */
-    --muted: 220 15% 25%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 280 60% 55%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 75% 55%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 210 40% 96%;
+    --accent-foreground: 222.2 84% 4.9%;
+    --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 220 15% 25%;
-    --input: 220 15% 25%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
     --ring: 240 100% 65%;
 
     /* Design System */
@@ -86,17 +86,20 @@
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    /* Dark theme - Game colors */
+    --background: 220 30% 8%;
     --foreground: 210 40% 98%;
+    --game-surface: 220 25% 12%;
+    --game-surface-secondary: 220 20% 16%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 220 25% 14%;
     --card-foreground: 210 40% 98%;
 
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 240 100% 65%;
+    --primary-foreground: 210 40% 98%;
 
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
@@ -113,6 +116,19 @@
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
+
+    /* Dark theme grid and cells */
+    --grid-border: 220 15% 25%;
+    --grid-thick-border: 220 10% 35%;
+    --cell-empty: 220 20% 18%;
+    --cell-filled: 220 25% 22%;
+    --cell-selected: 240 100% 65%;
+    --cell-highlighted: 240 50% 35%;
+    --cell-error: 0 75% 55%;
+    --cell-success: 120 60% 50%;
+    --number-button: 220 15% 20%;
+    --number-button-hover: 220 15% 25%;
+    --number-active: 240 100% 65%;
     --sidebar-background: 240 5.9% 10%;
     --sidebar-foreground: 240 4.8% 95.9%;
     --sidebar-primary: 224.3 76.3% 48%;

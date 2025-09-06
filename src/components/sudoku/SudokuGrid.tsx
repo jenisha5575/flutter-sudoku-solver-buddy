@@ -8,6 +8,7 @@ interface SudokuGridProps {
   errors: Set<string>;
   onCellClick: (row: number, col: number) => void;
   isComplete: boolean;
+  showingSolution?: boolean;
 }
 
 export const SudokuGrid = ({
@@ -17,6 +18,7 @@ export const SudokuGrid = ({
   errors,
   onCellClick,
   isComplete,
+  showingSolution = false,
 }: SudokuGridProps) => {
   const getCellStyle = (row: number, col: number) => {
     const isSelected = selectedCell?.row === row && selectedCell?.col === col;
@@ -45,13 +47,13 @@ export const SudokuGrid = ({
       {
         "bg-cell-empty": isEmpty,
         "bg-cell-filled": !isEmpty && !isSelected,
-        "bg-cell-selected text-primary-foreground": isSelected,
-        "bg-cell-highlighted": isHighlighted && !isSelected,
-        "bg-cell-error text-destructive-foreground": hasError,
-        "text-muted-foreground": isInitial,
-        "text-foreground": !isInitial && !hasError,
-        "cursor-not-allowed opacity-60": isInitial,
-        "shadow-lg ring-2 ring-primary": isSelected,
+        "bg-cell-selected text-primary-foreground": isSelected && !showingSolution,
+        "bg-cell-highlighted": isHighlighted && !isSelected && !showingSolution,
+        "bg-cell-error text-destructive-foreground": hasError && !showingSolution,
+        "text-muted-foreground": isInitial || showingSolution,
+        "text-foreground": !isInitial && !hasError && !showingSolution,
+        "cursor-not-allowed opacity-60": isInitial || showingSolution,
+        "shadow-lg ring-2 ring-primary": isSelected && !showingSolution,
       },
       
       // Complete state
@@ -70,7 +72,7 @@ export const SudokuGrid = ({
               key={`${rowIndex}-${colIndex}`}
               className={getCellStyle(rowIndex, colIndex)}
               onClick={() => onCellClick(rowIndex, colIndex)}
-              disabled={initialBoard[rowIndex][colIndex] !== null}
+              disabled={initialBoard[rowIndex][colIndex] !== null || showingSolution}
             >
               {cell || ""}
             </button>
