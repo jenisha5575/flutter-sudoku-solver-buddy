@@ -2,41 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* Sudoku Game Design System - Modern puzzle game aesthetic */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Game Background & Surface Colors */
+    --background: 220 30% 8%;
+    --foreground: 210 40% 98%;
+    --game-surface: 220 25% 12%;
+    --game-surface-secondary: 220 20% 16%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Card & Grid Colors */
+    --card: 220 25% 14%;
+    --card-foreground: 210 40% 98%;
+    --grid-border: 220 15% 25%;
+    --grid-thick-border: 220 10% 35%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-
-    --primary: 222.2 47.4% 11.2%;
+    /* Interactive Elements */
+    --primary: 240 100% 65%;
     --primary-foreground: 210 40% 98%;
+    --primary-glow: 240 100% 75%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 280 60% 55%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Cell States */
+    --cell-empty: 220 20% 18%;
+    --cell-filled: 220 25% 22%;
+    --cell-selected: 240 100% 65%;
+    --cell-highlighted: 240 50% 35%;
+    --cell-error: 0 75% 55%;
+    --cell-success: 120 60% 50%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Number Input */
+    --number-button: 220 15% 20%;
+    --number-button-hover: 220 15% 25%;
+    --number-active: 240 100% 65%;
 
-    --destructive: 0 84.2% 60.2%;
+    /* UI Elements */
+    --muted: 220 15% 25%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 280 60% 55%;
+    --accent-foreground: 210 40% 98%;
+    --destructive: 0 75% 55%;
     --destructive-foreground: 210 40% 98%;
+    --border: 220 15% 25%;
+    --input: 220 15% 25%;
+    --ring: 240 100% 65%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Design System */
+    --radius: 0.75rem;
+    --game-padding: 1.5rem;
 
-    --radius: 0.5rem;
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
+    --gradient-background: linear-gradient(135deg, hsl(var(--background)), hsl(220 35% 6%));
+    --gradient-surface: linear-gradient(135deg, hsl(var(--game-surface)), hsl(var(--game-surface-secondary)));
+
+    /* Shadows */
+    --shadow-game: 0 25px 50px -12px hsl(var(--primary) / 0.25);
+    --shadow-cell: 0 2px 8px -2px hsl(220 15% 5% / 0.5);
+    --shadow-button: 0 4px 12px -4px hsl(var(--primary) / 0.3);
+
+    /* Transitions */
+    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 
     --sidebar-background: 0 0% 98%;
 
@@ -100,6 +130,27 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+    background-image: var(--gradient-background);
+  }
+  
+  /* Game-specific animations */
+  @keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 20px hsl(var(--primary) / 0.3); }
+    50% { box-shadow: 0 0 30px hsl(var(--primary) / 0.5); }
+  }
+  
+  @keyframes success-bounce {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+  
+  .animate-success-bounce {
+    animation: success-bounce 0.6s ease-in-out;
   }
 }
